@@ -1,16 +1,25 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 
 class Patient(BaseModel):
     user_id: str
     name: str
     email: EmailStr
-    medical_history: Optional[List[str]] = []
+    medical_history: List[str] = Field(default_factory=list)
+    
+    _db = {}
 
-    def add_medical_record(self, record: str):
-        """Add a new medical record to the patient's history."""
+    def save(self):
+        Patient._db[self.user_id] = self.dict()
+
+    @staticmethod
+    def get(user_id):
+        data = Patient._db.get(user_id)
+        return Patient(**data) if data else None
+
+    def add_medical_record(self, record):
         self.medical_history.append(record)
+        self.save()
 
-    def get_medical_history(self) -> List[str]:
-        """Retrieve the patient's medical history."""
+    def get_medical_history(self):
         return self.medical_history
