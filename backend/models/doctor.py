@@ -5,8 +5,8 @@ class Doctor(BaseModel):
     doctor_id: str
     name: str
     specialization: str
-    type: str
-    organization_id: Optional[str] = None
+    type: str  # This indicates whether the doctor is freelance or registered
+    organization_id: Optional[str] = None  # This will be None if the doctor is freelance
 
     _db = {}
 
@@ -18,5 +18,8 @@ class Doctor(BaseModel):
         data = Doctor._db.get(doctor_id)
         return Doctor(**data) if data else None
 
-    def request_patient_history(self, patient):
-        return patient.get_medical_history()
+    def is_freelance(self):
+        return self.organization_id is None
+
+    def is_registered(self):
+        return self.organization_id is not None
