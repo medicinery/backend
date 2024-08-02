@@ -8,6 +8,16 @@ class Interaction(BaseModel):
     date: date
     notes: str
 
+    _db = {}
+
+    def save(self):
+        Interaction._db[self.interaction_id] = self.dict()
+
     @staticmethod
-    def get_interactions_for_doctor(doctor_id: str, interactions: list) -> list:
-        return [interaction for interaction in interactions if interaction.doctor_id == doctor_id]
+    def get(interaction_id):
+        data = Interaction._db.get(interaction_id)
+        return Interaction(**data) if data else None
+
+    @staticmethod
+    def get_interactions_for_doctor(doctor_id):
+        return [Interaction(**interaction) for interaction in Interaction._db.values() if interaction['doctor_id'] == doctor_id]
