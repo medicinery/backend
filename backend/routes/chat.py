@@ -1,4 +1,4 @@
-import datetime
+import time
 from flask import Blueprint, request, jsonify
 
 from backend.core.pool import run_in_thread
@@ -25,7 +25,7 @@ def create():
         id=generate_id(),
         title="New Chat",
         createdBy=user_name,
-        createdAt=datetime.datetime.now(),
+        createdAt=int(time.time() * 1000),
         messages=[],
     )
     db.collection("Chats").document(chat.id).set(chat.model_dump())
@@ -35,11 +35,9 @@ def create():
 
 @bp_chat.route("/delete/<string:chat_id>")
 def delete(chat_id: str):
-    try:
-        db.collection("Chats").document(chat_id).delete()
-    except Exception as e:
+    doc = db.collection("Chats").document(chat_id)
+    if not doc.get().exists:
         return jsonify({"message": "Chat not found"}), 404
-
     return jsonify({"message": "Chat deleted", "chat_id": chat_id}), 200
 
 
@@ -81,16 +79,18 @@ def push_message(chat_id):
 
     # Fetch the chat
     doc_data = Chat.model_validate(doc.to_dict())
-    last_message = doc_data.messages[-1]
-    if last_message.role == ChatMessageRole.user:
-        return jsonify({"message": "Cannot push message"}), 403
+    if len(doc_data.messages):
+        last_message = doc_data.messages[-1]
+        if last_message.role == ChatMessageRole.user:
+            return jsonify({"message": "Cannot push message"}), 403
 
     # Push user's message
     body = request.get_json()
     user_message = None
     try:
-        user_message = ChatMessage.model_validate(body, strict=True)
+        user_message = ChatMessage.model_validate(body)
     except Exception as e:
+        print(e)
         return jsonify({"message": "Invalid message content"}), 400
     doc_data.messages.append(user_message)
 
