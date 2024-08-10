@@ -1,19 +1,20 @@
 from flask import Flask
 from flask_cors import CORS
 
+
+from backend.core.firebase import init_firebase
 from backend.handlers.before_request import before_request
 from backend.routes.chat import bp_chat
+
+
+# -----------------------------------------------------------------------------
+
+init_firebase()
 
 # -----------------------------------------------------------------------------
 
 app = Flask(__name__)
 CORS(app)
-
-# -----------------------------------------------------------------------------
-# Register before request handler for authentication
-# -----------------------------------------------------------------------------
-
-app.before_request(before_request)
 
 # -----------------------------------------------------------------------------
 # Health check endpoint
@@ -23,6 +24,13 @@ app.before_request(before_request)
 @app.route("/health")
 def health():
     return "OK", 200
+
+
+# -----------------------------------------------------------------------------
+# Register before request handler for authentication
+# -----------------------------------------------------------------------------
+
+app.before_request(before_request)
 
 
 # -----------------------------------------------------------------------------
