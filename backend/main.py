@@ -1,15 +1,18 @@
+# -----------------------------------------------------------------------------
+
+from backend.core.firebase import init_firebase
+
+init_firebase()
+
+# -----------------------------------------------------------------------------
+
 from flask import Flask
 from flask_cors import CORS
 
 
-from backend.core.firebase import init_firebase
 from backend.handlers.before_request import before_request
 from backend.routes.chat import bp_chat
 
-
-# -----------------------------------------------------------------------------
-
-init_firebase()
 
 # -----------------------------------------------------------------------------
 

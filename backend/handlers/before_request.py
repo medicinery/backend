@@ -3,12 +3,14 @@ from flask import request, jsonify
 
 
 def before_request():
+    return None
+
     if request.endpoint == "health":
         return None
 
-    id_token = request.headers.get("AuthorizationToken")
+    id_token = request.headers.get("Authorization-Token")
     if not id_token:
-        return jsonify({"error": "Authorization token is required"}), 400
+        return jsonify({"message": "Unauthorized"}), 401
 
     try:
         decoded_token = auth.verify_id_token(id_token)
