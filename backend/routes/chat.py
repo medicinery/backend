@@ -1,7 +1,7 @@
 import time
 from flask import Blueprint, request, jsonify
 
-from backend.core.pool import run_in_thread
+from backend.core.concurrency import run_in_thread
 from backend.core.llm import ask_llm
 from backend.core.utils import generate_id
 from backend.core.firebase import db
