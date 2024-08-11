@@ -1,32 +1,27 @@
-from flask import Flask
+from flask import Blueprint
 from flask_cors import CORS
 
-from backend.routes.routes import bp_app
-
-# -----------------------------------------------------------------------------
-
-app = Flask(__name__)
-CORS(app)
-
-# -----------------------------------------------------------------------------
-# Register for root blueprint and health check endpoint
-# -----------------------------------------------------------------------------
-
-app.register_blueprint(bp_app, url_prefix="/")
-
-
-@app.route("/health")
-def health():
-    return "OK", 200
+from backend.routes.chat import bp_chat
+from backend.handlers.before_request import before_request
 
 
 # -----------------------------------------------------------------------------
-# Serve
+
+bp_app = Blueprint("root", __name__)
+CORS(bp_app, resources={r"/*": {"origins": "*"}})
+
+
+# -----------------------------------------------------------------------------
+# Register before request handler for authentication
 # -----------------------------------------------------------------------------
 
+bp_app.before_request(before_request)
 
-def main():
-    app.run(debug=True)
 
+# -----------------------------------------------------------------------------
+# Register blueprints
+# -----------------------------------------------------------------------------
+
+bp_app.register_blueprint(bp_chat, url_prefix="/chat")
 
 # -----------------------------------------------------------------------------

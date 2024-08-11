@@ -3,7 +3,7 @@ from flask import request, jsonify
 
 
 def before_request():
-    setattr(request, "userID", "aqE2MxBnijRk7cZbP3lQj63RIyF2")
+    # setattr(request, "userID", "aqE2MxBnijRk7cZbP3lQj63RIyF2")
 
     return None
 

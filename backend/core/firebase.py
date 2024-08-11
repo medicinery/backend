@@ -6,7 +6,3 @@ cred = credentials.Certificate("./credentials.json")
 initialize_app(cred)
 
 db = client()
-
-
-def init_firebase():
-    pass

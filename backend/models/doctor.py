@@ -9,7 +9,7 @@ class DoctorAddress(BaseModel):
     longitude: float = Field(..., alias="longitude")
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class DoctorContactInformation(BaseModel):
@@ -18,7 +18,7 @@ class DoctorContactInformation(BaseModel):
     address: DoctorAddress = Field(..., alias="address")
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class DoctorAvailability(BaseModel):
@@ -26,7 +26,7 @@ class DoctorAvailability(BaseModel):
     hours: str = Field(..., alias="hours")
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class DoctorProfile(BaseModel):
@@ -38,7 +38,7 @@ class DoctorProfile(BaseModel):
     availability: DoctorAvailability = Field(..., alias="availability")
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Doctor(BaseModel):
@@ -56,4 +56,4 @@ class Doctor(BaseModel):
     )
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True

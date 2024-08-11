@@ -9,10 +9,14 @@ from backend.models.user import User
 from backend.models.chat import Chat, ChatMessage, ChatMessageRole
 
 
+# -----------------------------------------------------------------------------
+
 bp_chat = Blueprint("chat", __name__)
 
+# -----------------------------------------------------------------------------
 
-@bp_chat.route("/create")
+
+@bp_chat.route("/create", methods=["POST"])
 def create():
     user_id = getattr(request, "userID", None)
     if user_id is None:
@@ -33,12 +37,18 @@ def create():
     return jsonify({"message": "Chat created", "chat_id": chat.id}), 200
 
 
-@bp_chat.route("/delete/<string:chat_id>")
+# -----------------------------------------------------------------------------
+
+
+@bp_chat.route("/delete/<string:chat_id>", methods=["DELETE"])
 def delete(chat_id: str):
     doc = db.collection("Chats").document(chat_id)
     if not doc.get().exists:
         return jsonify({"message": "Chat not found"}), 404
     return jsonify({"message": "Chat deleted", "chat_id": chat_id}), 200
+
+
+# -----------------------------------------------------------------------------
 
 
 def process_chat(chat_id: str) -> None:
@@ -112,3 +122,6 @@ def push_message(chat_id):
     run_in_thread(process_chat)(chat_id)
 
     return jsonify({"message": "Success"}), 200
+
+
+# -----------------------------------------------------------------------------

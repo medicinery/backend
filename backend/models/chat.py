@@ -21,7 +21,7 @@ class ChatMessage(BaseModel):
 
     class Config:
         use_enum_values = True
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class Chat(BaseModel):
@@ -34,4 +34,4 @@ class Chat(BaseModel):
     messages: List[ChatMessage] = Field(..., alias="messages")
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
